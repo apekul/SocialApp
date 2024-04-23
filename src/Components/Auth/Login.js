@@ -12,17 +12,46 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { useNavigate } from "react-router-dom";
 
 const defaultTheme = createTheme();
 
 const Login = ({ setShowLogin }) => {
-  const handleSubmit = (event) => {
+  const navigate = useNavigate(); // Initialize useNavigate
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+
+    try {
+      const response = await fetch("http://localhost:3000/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: data.get("email"),
+          password: data.get("password"),
+        }),
+      });
+
+      if (response.ok) {
+        // Handle successful login
+        const responseData = await response.json();
+        const { token } = responseData;
+
+        // Save the token to local storage
+        localStorage.setItem("token", token);
+        // Redirect to home page
+        navigate("/");
+      } else {
+        // Handle failed login
+        const responseData = await response.json();
+        console.error("Login failed:", responseData.message);
+      }
+    } catch (error) {
+      console.error("An error occurred during login:", error);
+    }
   };
   return (
     <ThemeProvider theme={defaultTheme}>

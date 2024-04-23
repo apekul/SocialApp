@@ -6,7 +6,20 @@ const HomePage = () => {
   const navigate = useNavigate(); // Initialize navigate
 
   useEffect(() => {
-    fetch("http://localhost:3000/")
+    // Retrieve token from local storage
+    const token = localStorage.getItem("token");
+
+    // If token is not present, navigate to login page
+    if (!token) {
+      navigate("/auth");
+      return;
+    }
+
+    fetch("http://localhost:3000/", {
+      headers: {
+        Authorization: token, // Include token in Authorization header
+      },
+    })
       .then((response) => {
         if (response.ok) {
           return response.text(); // Parse the response body as text
