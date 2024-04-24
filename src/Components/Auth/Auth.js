@@ -17,9 +17,9 @@ const Auth = () => {
   return (
     <div className=" flex items-center h-[100vh]">
       {showLogin ? (
-        <Login setShowLogin={setShowLogin} />
-      ) : (
         <Register setShowLogin={setShowLogin} />
+      ) : (
+        <Login setShowLogin={setShowLogin} />
       )}
     </div>
   );
