@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -13,13 +13,36 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 const defaultTheme = createTheme();
 
 const Register = ({ setShowLogin }) => {
-  const handleSubmit = (event) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [lastname, setLastName] = useState("");
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    if (!email || !password) {
+      console.log("Email and password are required");
+      return;
+    }
+    try {
+      const response = await fetch("http://localhost:3000/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          lastname,
+          email,
+          password,
+        }),
+      });
+      const responseData = await response.json();
+      console.log(responseData.message);
+      setShowLogin(false);
+    } catch (error) {
+      console.error("An error occurred during register:", error);
+    }
   };
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -47,23 +70,22 @@ const Register = ({ setShowLogin }) => {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  autoComplete="given-name"
-                  name="firstName"
-                  required
+                  name="name"
                   fullWidth
-                  id="firstName"
-                  label="First Name"
-                  autoFocus
+                  id="name"
+                  label="Name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  required
                   fullWidth
                   id="lastName"
                   label="Last Name"
                   name="lastName"
-                  autoComplete="family-name"
+                  value={lastname}
+                  onChange={(e) => setLastName(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -73,7 +95,8 @@ const Register = ({ setShowLogin }) => {
                   id="email"
                   label="Email Address"
                   name="email"
-                  autoComplete="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -84,7 +107,8 @@ const Register = ({ setShowLogin }) => {
                   label="Password"
                   type="password"
                   id="password"
-                  autoComplete="new-password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
               </Grid>
             </Grid>
@@ -94,13 +118,13 @@ const Register = ({ setShowLogin }) => {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign Up
+              Register
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <span
                   className="cursor-pointer text-blue-500 hover:text-blue-700 hover:underline"
-                  onClick={() => setShowLogin(true)}
+                  onClick={() => setShowLogin((prev) => !prev)}
                 >
                   Already have an account? Sign in
                 </span>

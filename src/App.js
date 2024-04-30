@@ -8,7 +8,8 @@ function App() {
       <div className="App">
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/auth" element={<Auth />} />
+          <Route path="/auth/" element={<Auth />} />
+
           {/* Wildcard route for handling non-existing routes */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

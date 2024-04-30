@@ -1,38 +1,38 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate from React Router
+import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
   const [responseData, setResponseData] = useState(null);
-  const navigate = useNavigate(); // Initialize navigate
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Retrieve token from local storage
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("accessToken");
 
-    // If token is not present, navigate to login page
     if (!token) {
       navigate("/auth");
       return;
     }
 
-    fetch("http://localhost:3000/", {
-      headers: {
-        Authorization: token, // Include token in Authorization header
-      },
-    })
-      .then((response) => {
+    const fetchData = async (token) => {
+      try {
+        const response = await fetch("http://localhost:3000/", {
+          headers: {
+            Authorization: token,
+          },
+        });
+
         if (response.ok) {
-          return response.text(); // Parse the response body as text
+          const data = await response.text();
+          setResponseData(data);
         } else {
-          throw new Error("Failed to fetch"); // Throw error for non-successful responses
+          throw new Error("Unauthorized");
         }
-      })
-      .then((data) => {
-        setResponseData(data); // Set response data
-      })
-      .catch(() => {
-        navigate("/auth"); // Redirect to login page if request fails
-      });
+      } catch (error) {
+        navigate("/auth");
+      }
+    };
+
+    fetchData(token);
   }, [navigate]);
 
   return (

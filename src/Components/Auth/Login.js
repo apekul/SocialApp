@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -18,11 +18,16 @@ const defaultTheme = createTheme();
 
 const Login = ({ setShowLogin }) => {
   const navigate = useNavigate(); // Initialize useNavigate
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
 
+    if (!email || !password) {
+      console.log("Email and password must be filled");
+      return;
+    }
     try {
       const response = await fetch("http://localhost:3000/auth/login", {
         method: "POST",
@@ -30,25 +35,16 @@ const Login = ({ setShowLogin }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email: data.get("email"),
-          password: data.get("password"),
+          email,
+          password,
         }),
       });
+      const responseData = await response.json();
+      const { accessToken, refreshToken } = responseData;
 
-      if (response.ok) {
-        // Handle successful login
-        const responseData = await response.json();
-        const { token } = responseData;
-
-        // Save the token to local storage
-        localStorage.setItem("token", token);
-        // Redirect to home page
-        navigate("/");
-      } else {
-        // Handle failed login
-        const responseData = await response.json();
-        console.error("Login failed:", responseData.message);
-      }
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
+      navigate("/");
     } catch (error) {
       console.error("An error occurred during login:", error);
     }
@@ -84,7 +80,8 @@ const Login = ({ setShowLogin }) => {
                   id="email"
                   label="Email Address"
                   name="email"
-                  autoComplete="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -95,7 +92,8 @@ const Login = ({ setShowLogin }) => {
                   label="Password"
                   type="password"
                   id="password"
-                  autoComplete="new-password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -124,7 +122,7 @@ const Login = ({ setShowLogin }) => {
               <Grid item>
                 <span
                   className="cursor-pointer text-blue-500 hover:text-blue-700 hover:underline"
-                  onClick={() => setShowLogin(false)}
+                  onClick={() => setShowLogin((prev) => !prev)}
                 >
                   Don't have an account? Register
                 </span>
