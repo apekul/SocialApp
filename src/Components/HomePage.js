@@ -1,38 +1,54 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { getNewAccessToken } from "../utils/refreshToken";
 
 const HomePage = () => {
   const [responseData, setResponseData] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-
-    if (!token) {
-      navigate("/auth");
-      return;
-    }
-
-    const fetchData = async (token) => {
+    const fetchData = async () => {
       try {
+        const accessToken = localStorage.getItem("accessToken");
+
+        // try tyo generate new access token, if fails then throw error
+        if (!accessToken) {
+          try {
+            await getNewAccessToken();
+            return fetchData(); // Retry fetching data after refreshing the access token
+          } catch (error) {
+            throw new Error("Failed to refresh access token");
+          }
+        }
+
         const response = await fetch("http://localhost:3000/", {
           headers: {
-            Authorization: token,
+            Authorization: accessToken,
           },
         });
 
         if (response.ok) {
-          const data = await response.text();
-          setResponseData(data);
+          const data = await response.json();
+          setResponseData(data.message); // set data if fetch was correct
+        } else if (response.status === 401) {
+          try {
+            await getNewAccessToken(); // Refresh the access token
+            return fetchData(); // Retry fetching data after refreshing the access token
+          } catch (error) {
+            throw new Error("Failed to refresh access token"); // failed to refresh access
+          }
         } else {
-          throw new Error("Unauthorized");
+          throw new Error("Failed to fetch data");
         }
       } catch (error) {
-        navigate("/auth");
+        console.error("Error fetching data:", error);
+        if (error.message !== "Failed to fetch data") {
+          navigate("/auth");
+        }
       }
     };
 
-    fetchData(token);
+    fetchData();
   }, [navigate]);
 
   return (
