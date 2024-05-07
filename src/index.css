@@ -15,3 +15,23 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+
+/* RWD padding used in components */
+.rwd-padding{
+  padding-left: 5rem;
+  padding-right: 5rem;
+}
+@media (max-width: 768px) {
+  .rwd-padding {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .rwd-padding {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
