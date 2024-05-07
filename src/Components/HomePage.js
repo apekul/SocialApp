@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getNewAccessToken } from "../utils/refreshToken";
-import Footer from "./Footer";
-import Navbar from "./Navbar";
+
 const HomePage = () => {
   const [responseData, setResponseData] = useState(null);
   const navigate = useNavigate();
@@ -60,16 +59,8 @@ const HomePage = () => {
   }, [navigate]);
 
   return (
-    <div className="flex flex-col">
-      <div className="flex-1">
-        <Navbar />
-        {/* User Panel */}
-        <div className="min-h-screen w-full">
-          {responseData && <div>Response data: {responseData}</div>}
-        </div>
-        {/* Home board with photos/comments/posts */}
-      </div>
-      <Footer />
+    <div className="rwd-padding min-h-screen">
+      {responseData && <div>Response data: {responseData}</div>}
     </div>
   );
 };
