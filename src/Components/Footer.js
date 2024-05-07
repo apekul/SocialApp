@@ -9,9 +9,9 @@ const Footer = () => {
         <span className="text-center  w-[15rem] sm:w-[30rem] md:w-[40rem]">
           <h1 className="text-2xl md:text-3xl font-semibold">SocialAPP</h1>
           <p className="text-md md:text-lg ">
-            SocialAPP is a frontend social applicatyion with user
-            authentication, enabling posting of text and photos for engaging
-            interactions.
+            SocialAPP is a frontend social application with user authentication,
+            friends list, chat and enabling posting of text and photos with
+            ability to react and comment them.
           </p>
         </span>
         <div className="flex gap-5">

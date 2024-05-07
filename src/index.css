@@ -19,10 +19,10 @@ code {
 
 /* RWD padding used in components */
 .rwd-padding{
-  padding-left: 5rem;
-  padding-right: 5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
   .rwd-padding {
     padding-left: 2rem;
     padding-right: 2rem;
@@ -34,4 +34,4 @@ code {
     padding-left: 1rem;
     padding-right: 1rem;
   }
-}
+} */

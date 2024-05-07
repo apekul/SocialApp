@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getNewAccessToken } from "../utils/refreshToken";
+import { getNewAccessToken } from "../../utils/refreshToken";
+
+import HomePageMenu from "./HomePageMenu";
+import Posts from "./Posts";
+import FriendList from "./FriendList";
 
 const HomePage = () => {
   const [responseData, setResponseData] = useState(null);
@@ -59,8 +63,17 @@ const HomePage = () => {
   }, [navigate]);
 
   return (
-    <div className="rwd-padding min-h-screen">
+    <div id="homepage" className="rwd-padding min-h-screen">
       {responseData && <div>Response data: {responseData}</div>}
+
+      <div className="flex min-h-screen justify-between">
+        {/* Left additional navigation */}
+        <HomePageMenu />
+        {/* Display posts */}
+        <Posts />
+        {/* Friend list menu */}
+        <FriendList />
+      </div>
     </div>
   );
 };
