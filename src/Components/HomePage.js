@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getNewAccessToken } from "../utils/refreshToken";
-
+import Footer from "./Footer";
+import Navbar from "./Navbar";
 const HomePage = () => {
   const [responseData, setResponseData] = useState(null);
   const navigate = useNavigate();
@@ -10,51 +11,65 @@ const HomePage = () => {
     const fetchData = async () => {
       try {
         const accessToken = localStorage.getItem("accessToken");
-
-        // try tyo generate new access token, if fails then throw error
         if (!accessToken) {
-          try {
-            await getNewAccessToken();
-            return fetchData(); // Retry fetching data after refreshing the access token
-          } catch (error) {
-            throw new Error("Failed to refresh access token");
-          }
+          await refreshTokenAndFetchData();
+        } else {
+          fetchDataWithToken(accessToken);
         }
+      } catch (error) {
+        handleError(error);
+      }
+    };
 
+    const refreshTokenAndFetchData = async () => {
+      try {
+        await getNewAccessToken();
+        await fetchData();
+      } catch (error) {
+        throw new Error("Failed to refresh acess token");
+      }
+    };
+
+    const fetchDataWithToken = async (accessToken) => {
+      try {
         const response = await fetch("http://localhost:3000/", {
           headers: {
             Authorization: accessToken,
           },
         });
-
         if (response.ok) {
           const data = await response.json();
-          setResponseData(data.message); // set data if fetch was correct
+          setResponseData(data.message);
         } else if (response.status === 401) {
-          try {
-            await getNewAccessToken(); // Refresh the access token
-            return fetchData(); // Retry fetching data after refreshing the access token
-          } catch (error) {
-            throw new Error("Failed to refresh access token"); // failed to refresh access
-          }
+          await refreshTokenAndFetchData();
         } else {
           throw new Error("Failed to fetch data");
         }
       } catch (error) {
-        console.error("Error fetching data:", error);
-        if (error.message !== "Failed to fetch data") {
-          navigate("/auth");
-        }
+        throw error;
       }
     };
 
+    const handleError = (error) => {
+      console.log("Error fetching data:", error);
+      if (error.message !== "Failed to fetch data") {
+        navigate("/auth");
+      }
+    };
     fetchData();
   }, [navigate]);
 
   return (
-    <div>
-      <h1>HomePage</h1>
-      {responseData && <div>Response data: {responseData}</div>}
+    <div className="flex flex-col">
+      <div className="flex-1">
+        <Navbar />
+        {/* User Panel */}
+        <div className="min-h-screen w-full">
+          {responseData && <div>Response data: {responseData}</div>}
+        </div>
+        {/* Home board with photos/comments/posts */}
+      </div>
+      <Footer />
     </div>
   );
 };
