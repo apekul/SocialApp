@@ -66,7 +66,7 @@ const HomePage = () => {
     <div id="homepage" className="rwd-padding min-h-screen">
       {responseData && <div>Response data: {responseData}</div>}
 
-      <div className="flex min-h-screen justify-between">
+      <div className="flex min-h-screen justify-between mb-10">
         {/* Left additional navigation */}
         <HomePageMenu />
         {/* Display posts */}

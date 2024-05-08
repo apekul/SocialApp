@@ -5,7 +5,7 @@ import { IoIosNotifications } from "react-icons/io";
 
 const HomePageMenu = () => {
   return (
-    <ul>
+    <ul className="">
       <li className="flex text-xl gap-2 items-center cursor-pointer">
         <IoPersonCircle
           className=""
