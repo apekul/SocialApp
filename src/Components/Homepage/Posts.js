@@ -5,7 +5,6 @@ import Post from "./PostComponents/Post";
 import CreatePost from "./PostComponents/CreatePost";
 
 const Posts = () => {
-  // fetch posts from database
   return (
     <ul className="w-auto flex flex-col  gap-3">
       {/* create post */}
