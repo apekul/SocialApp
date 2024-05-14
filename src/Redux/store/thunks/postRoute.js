@@ -24,8 +24,20 @@ export const fetchPostdata = createAsyncThunk(
       });
 
       if (response.ok) {
+        // if response is ok then return data
         const data = await response.json();
         return data;
+      } else if (response.status === 401) {
+        // if error is 401 then refreshToken
+        const res = await dispatch(refreshToken());
+        // if token refresh success then run fetchPostdata again
+        if (res.payload.success) {
+          return dispatch(fetchPostdata());
+        } else {
+          // if refreshToken is not success then throw error
+          throw new Error("Failed to refresh access token");
+        }
+        // if response.ok is error then trhow error
       } else {
         throw new Error("Failed to fetch data");
       }
@@ -41,8 +53,9 @@ export const refreshToken = createAsyncThunk(
   async (_, { dispatch }) => {
     try {
       await getNewAccessToken(); // Dispatch action to refresh token
+      return { success: true };
     } catch (error) {
-      throw new Error("Failed to refresh access token");
+      return { success: false };
     }
   }
 );

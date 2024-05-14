@@ -10,6 +10,7 @@ export const fetchSampleData = createAsyncThunk(
       if (!accessToken) {
         await dispatch(refreshToken()); // Dispatch token refresh action
       }
+      // Refresh access token if failed to fetch!
       // Retrieve the access token again after potential refresh
       const updatedAccessToken = localStorage.getItem("accessToken");
       // If there's still no access token after attempted refresh, throw an error
