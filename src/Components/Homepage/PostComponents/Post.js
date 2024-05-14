@@ -1,11 +1,11 @@
 import React from "react";
-import Reactions from "./Reactions";
 import Images from "./Images";
+import moment from "moment";
 
 const Post = ({ post }) => {
   // get user name by ID
   return (
-    <div className="px-5 py-4  shadow rounded-lg max-w-2xl w-[40rem]">
+    <div className="px-5 py-4  max-w-2xl w-[40rem]">
       <div className="flex mb-4">
         <img
           className="w-12 h-12 rounded-full"
@@ -17,18 +17,18 @@ const Post = ({ post }) => {
             user name
           </span>
           <span className="block text-sm text-gray-500 dark:text-gray-400 font-light leading-snug">
-            {post.timestamp}
+            {moment(post.timestamp, "YYYYMMDD").fromNow()}
           </span>
         </div>
       </div>
       <p className="text-gray-800 dark:text-gray-100 leading-snug md:leading-normal">
-        {post.content.text}
+        {post.text}
       </p>
 
       {/* Images */}
-      <Images images={post.content.image} />
+      {post.images && <Images images={post.images} />}
       {/* Reactions */}
-      <Reactions content={post.content} />
+      {/* <Reactions content={post.content} /> */}
     </div>
   );
 };

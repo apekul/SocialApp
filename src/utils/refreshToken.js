@@ -18,7 +18,9 @@ export const getNewAccessToken = async () => {
     const { accessToken } = responseData;
     localStorage.setItem("accessToken", accessToken);
   } catch (error) {
-    console.error("Error refreshing access token:", error);
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("accessToken");
+    // console.error("Error refreshing access token:", error);
     throw error;
   }
 };

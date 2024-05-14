@@ -1,7 +1,12 @@
 import React from "react";
 
 const CreatePost = () => {
-  return <div>create post here</div>;
+  return (
+    <div>
+      <input type="text" placeholder="Post text..." />
+      <input type="file" />
+    </div>
+  );
 };
 
 export default CreatePost;

@@ -1,70 +1,30 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
+
+import { useDispatch, useSelector } from "react-redux";
+import { fetchSampleData } from "../../Redux/store/thunks/sampleRoute";
 import { useNavigate } from "react-router-dom";
-import { getNewAccessToken } from "../../utils/refreshToken";
 
 import HomePageMenu from "./HomePageMenu";
 import Posts from "./Posts";
 import FriendList from "./FriendList";
 
 const HomePage = () => {
-  const [responseData, setResponseData] = useState(null);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { message, status, error } = useSelector((state) => state.sampleRoute);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const accessToken = localStorage.getItem("accessToken");
-        if (!accessToken) {
-          await refreshTokenAndFetchData();
-        } else {
-          fetchDataWithToken(accessToken);
-        }
-      } catch (error) {
-        handleError(error);
-      }
-    };
+    dispatch(fetchSampleData());
+  }, [dispatch, navigate]);
 
-    const refreshTokenAndFetchData = async () => {
-      try {
-        await getNewAccessToken();
-        await fetchData();
-      } catch (error) {
-        throw new Error("Failed to refresh acess token");
-      }
-    };
-
-    const fetchDataWithToken = async (accessToken) => {
-      try {
-        const response = await fetch("http://localhost:3000/", {
-          headers: {
-            Authorization: accessToken,
-          },
-        });
-        if (response.ok) {
-          const data = await response.json();
-          setResponseData(data.message);
-        } else if (response.status === 401) {
-          await refreshTokenAndFetchData();
-        } else {
-          throw new Error("Failed to fetch data");
-        }
-      } catch (error) {
-        throw error;
-      }
-    };
-
-    const handleError = (error) => {
-      console.log("Error fetching data:", error);
-      if (error.message !== "Failed to fetch data") {
-        navigate("/auth");
-      }
-    };
-    fetchData();
-  }, [navigate]);
-
+  useEffect(() => {
+    if (error === "Failed to refresh access token") {
+      navigate("/auth");
+    }
+  }, [error, navigate]);
   return (
     <div id="homepage" className="rwd-padding min-h-screen">
-      {responseData && <div>Response data: {responseData}</div>}
+      <div>Response data: {message}</div>
 
       <div className="flex min-h-screen justify-between mb-10">
         {/* Left additional navigation */}
