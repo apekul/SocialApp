@@ -22,21 +22,22 @@ const Posts = () => {
       navigate("/auth");
     }
   }, [error, navigate]);
-
   return (
     <ul className="w-auto flex flex-col  gap-3">
       {/* create post */}
       <CreatePost />
       {!posts && <li>No posts</li>}
-      {posts?.map((post, index) => (
-        <li
-          key={post._id}
-          className="rounded-md bg-white dark:bg-gray-800 shadow"
-        >
-          <Post post={post} />
-          <Comments post={post} />
-        </li>
-      ))}
+      {posts &&
+        posts.length !== 0 &&
+        posts.map((post, index) => (
+          <li
+            key={post._id}
+            className="rounded-md bg-white dark:bg-gray-800 shadow"
+          >
+            <Post post={post} />
+            <Comments post={post} />
+          </li>
+        ))}
     </ul>
   );
 };

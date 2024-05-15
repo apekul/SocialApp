@@ -32,6 +32,7 @@ export const fetchPostdata = createAsyncThunk(
         const res = await dispatch(refreshToken());
         // if token refresh success then run fetchPostdata again
         if (res.payload.success) {
+          // Retry the fetchPostdata action immediately after successful token refresh
           return dispatch(fetchPostdata());
         } else {
           // if refreshToken is not success then throw error
@@ -76,7 +77,7 @@ export const dataSlice = createSlice({
       })
       .addCase(fetchPostdata.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.posts = action.payload;
+        state.posts = action.payload.payload || action.payload;
         state.error = null;
       })
       .addCase(fetchPostdata.rejected, (state, action) => {
