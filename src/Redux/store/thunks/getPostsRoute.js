@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { getNewAccessToken } from "../../../utils/refreshToken";
 
 export const fetchPostdata = createAsyncThunk(
-  "postsRoute/fetchPostdata",
+  "getPostsRoute/fetchPostdata",
   async (_, { dispatch, getState }) => {
     try {
       // fetchData with accessToken
@@ -62,7 +62,7 @@ export const refreshToken = createAsyncThunk(
 );
 
 export const dataSlice = createSlice({
-  name: "postsRoute",
+  name: "getPostsRoute",
   initialState: {
     posts: [],
     status: "idle",
@@ -86,4 +86,4 @@ export const dataSlice = createSlice({
       });
   },
 });
-export const postRouteReducer = dataSlice.reducer;
+export const getPostsRouteReducer = dataSlice.reducer;

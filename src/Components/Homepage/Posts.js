@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchPostdata } from "../../Redux/store/thunks/postRoute";
+import { fetchPostdata } from "../../Redux/store/thunks/getPostsRoute";
 import { useNavigate } from "react-router-dom";
 
 import Post from "./PostComponents/Post";
@@ -11,7 +11,7 @@ const Posts = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { posts, status, error } = useSelector((state) => state.postsRoute);
+  const { posts, status, error } = useSelector((state) => state.allPosts);
 
   useEffect(() => {
     dispatch(fetchPostdata());
@@ -23,7 +23,7 @@ const Posts = () => {
     }
   }, [error, navigate]);
   return (
-    <ul className="w-auto flex flex-col  gap-3">
+    <ul className="flex flex-col  gap-3 w-[30rem] lg:w-[50rem]">
       {/* create post */}
       <CreatePost />
       {!posts && <li>No posts</li>}

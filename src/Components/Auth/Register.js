@@ -10,39 +10,28 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
+import { useDispatch, useSelector } from "react-redux";
+
+import { register } from "../../Redux/store/thunks/auth/register";
+
 const defaultTheme = createTheme();
 
 const Register = ({ setShowLogin }) => {
+  const dispatch = useDispatch();
+
+  const { message, error } = useSelector((state) => state.register);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [lastname, setLastName] = useState("");
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
     if (!email || !password) {
       console.log("Email and password are required");
       return;
     }
-    try {
-      const response = await fetch("http://localhost:3000/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name,
-          lastname,
-          email,
-          password,
-        }),
-      });
-      const responseData = await response.json();
-      console.log(responseData.message);
-      setShowLogin(false);
-    } catch (error) {
-      console.error("An error occurred during register:", error);
-    }
+    dispatch(register({ name, lastname, email, password }));
   };
   return (
     <ThemeProvider theme={defaultTheme}>

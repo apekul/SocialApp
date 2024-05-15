@@ -12,43 +12,20 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useNavigate } from "react-router-dom";
 
+import { useDispatch } from "react-redux";
+import { login } from "../../Redux/store/thunks/auth/login";
 const defaultTheme = createTheme();
 
 const Login = ({ setShowLogin }) => {
-  const navigate = useNavigate(); // Initialize useNavigate
+  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    if (!email || !password) {
-      console.log("Email and password must be filled");
-      return;
-    }
-    try {
-      const response = await fetch("http://localhost:3000/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-      });
-      const responseData = await response.json();
-      const { accessToken, refreshToken } = responseData;
-
-      localStorage.setItem("accessToken", accessToken);
-      localStorage.setItem("refreshToken", refreshToken);
-      navigate("/");
-    } catch (error) {
-      console.error("An error occurred during login:", error);
-    }
+  const handleSubmit = () => {
+    dispatch(login({ email, password }));
   };
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">

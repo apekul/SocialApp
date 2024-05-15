@@ -5,7 +5,7 @@ import moment from "moment";
 const Post = ({ post }) => {
   // get user name by ID
   return (
-    <div className="px-5 py-4  max-w-2xl w-[40rem]">
+    <div className="px-5 py-4 w-full">
       <div className="flex mb-4">
         <img
           className="w-12 h-12 rounded-full"
