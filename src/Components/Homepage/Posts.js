@@ -16,17 +16,19 @@ const Posts = () => {
   useEffect(() => {
     dispatch(fetchPostdata());
   }, [dispatch]);
+
   useEffect(() => {
     if (error === "Failed to refresh access token") {
       navigate("/auth");
     }
   }, [error, navigate]);
+
   return (
     <ul className="w-auto flex flex-col  gap-3">
       {/* create post */}
       <CreatePost />
       {!posts && <li>No posts</li>}
-      {posts.map((post, index) => (
+      {posts?.map((post, index) => (
         <li
           key={post._id}
           className="rounded-md bg-white dark:bg-gray-800 shadow"
